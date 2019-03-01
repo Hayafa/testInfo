@@ -1,0 +1,92 @@
+package com.capgemini.salesmanagement.test;
+
+import org.junit.After;
+import org.junit.AfterClass;
+import org.junit.Assert;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import com.capgemini.salesmanagement.bean.Sale;
+import com.capgemini.salesmanagement.exceptions.IncorrectNameException;
+import com.capgemini.salesmanagement.exceptions.IncorrectPriceException;
+import com.capgemini.salesmanagement.exceptions.InvalidProductCodeException;
+import com.capgemini.salesmanagement.exceptions.InvalidProductException;
+import com.capgemini.salesmanagement.exceptions.ProductLimitSurpassedException;
+import com.capgemini.salesmanagement.service.ISaleService;
+import com.capgemini.salesmanagement.service.SaleService;
+import com.capgemini.salesmanagement.util.CollectionUtil;
+
+public class TestClass {
+
+	public static ISaleService services;
+	@BeforeClass
+	public static void setUpTestEnv() {
+		services=new SaleService();
+	}
+	@Before
+	public void setUpTestData() {
+		Sale sale=new Sale();
+		CollectionUtil.sales.put(sale.getProdCode(), sale);
+	}
+	@Test(expected= InvalidProductCodeException.class)
+	public void TestGetProductCodeForInvalidValidateProductCode() throws InvalidProductCodeException {
+		boolean expectedProductId=services.validateProductCode(1006);
+	}
+	@Test
+	public void TestGetProductCodeForValidValidateProductCode() throws InvalidProductCodeException {
+		boolean expectedProductId=services.validateProductCode(1002);
+		boolean actualProductId=true;
+		Assert.assertEquals(expectedProductId, actualProductId);
+	}
+
+	@Test(expected=ProductLimitSurpassedException.class)
+	public void TestGetQuantityForInvalidValidateQuantity() throws ProductLimitSurpassedException {
+		boolean expectedProductQuantity=services.ValidateQuantity(6);
+	}
+	@Test
+	public void TestGetQuantityForValidValidateQuantity() throws ProductLimitSurpassedException {
+		boolean expectedProductQuantity=services.ValidateQuantity(4);
+		boolean actualqty=true;
+		Assert.assertEquals(expectedProductQuantity, actualqty);
+	}
+	@Test(expected= InvalidProductException.class)
+	public void TestGetProductCodeForInvalidProductvalidateProductCat() throws InvalidProductException {
+		boolean expectedProduct=services.validateProductCat("Clothing");
+	}
+	@Test
+	public void TestGetProductCodeForValidProductvalidateProductCat() throws InvalidProductException {
+		boolean expectedProduct=services.validateProductCat("Electronics");
+		boolean actualProduct=true;
+		Assert.assertEquals(expectedProduct, actualProduct);
+		}
+	
+	@Test(expected=IncorrectNameException.class)
+	public void TestGetQuantityForInvalidValidateProductName() throws IncorrectNameException {
+		boolean expectedProductName=services.validateProductName("wool");
+	}
+	@Test
+	public void TestGetQuantityForValidateProductName() throws IncorrectNameException {
+		boolean expectedProductName=services.validateProductName("TV");
+		boolean actualName=true;
+		Assert.assertEquals(expectedProductName, actualName);
+	}
+	@Test(expected=IncorrectPriceException .class)
+	public void TestGetQuantityForInvalidValidateProductPrice() throws IncorrectPriceException  {
+		boolean expectedProductPrice=services.validateProductPrice(100);
+	}
+	@Test
+	public void TestGetQuantityForValidValidateProductPrice() throws IncorrectPriceException  {
+		boolean expectedProductPrice=services.validateProductPrice(300);
+		boolean actualPrice=true;
+		Assert.assertEquals(expectedProductPrice, actualPrice);
+	}
+	@After
+	public void tearDownTestData() {
+		CollectionUtil.sales.clear();
+	}
+	@AfterClass
+	public static void tearDownTestEnv() {
+		services=null;
+	}
+}
